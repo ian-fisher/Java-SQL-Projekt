@@ -20,78 +20,85 @@ class SQL_Tester {
     } catch (SQLException e) {
       // Gibt eine Fehlermeldung aus und beendet die Anwendung, falls beim Verbinden mit der Datenbank ein Problem aufgetreten ist
       System.out.printf("FEHLER: %s%n", e.getMessage());
-    }
-    
-    try {
-      // Verbindung zur Datenbank aufbauen
-      // Tip: Der hier öfter verwendete Befehl "try" erlaubt es, im Programmablauf auftretende Fehler
-      // abzufangen und auf sie zu reagieren, statt das Program bei einem Fehler direkt zu beenden
-      datenbank.connect();
+    } finally {
       
       try {
-        // Falls schon eine Tabelle mit dem Namen "einkaufszettel" existiert, dann alte Tabelle löschen ...  
-        String befehl = "DROP TABLE IF EXISTS einkaufszettel42";
-        System.out.printf(">> %s%n", befehl);
-        datenbank.executeUpdate(befehl);
+        // Verbindung zur Datenbank aufbauen
+        // Tip: Der hier öfter verwendete Befehl "try" erlaubt es, im Programmablauf auftretende Fehler
+        // abzufangen und auf sie zu reagieren, statt das Program bei einem Fehler direkt zu beenden
+        datenbank.connect();
         
-        // ... neue Tabelle "einkaufszettel" erstellen ... 
-        befehl = "CREATE TABLE einkaufszettel42 (nummer INT(6) UNSIGNED PRIMARY KEY, name VARCHAR(30) NOT NULL, anzahl INT(3) NOT NULL, preis DECIMAL(10,2) NOT NULL)";
-        System.out.printf(">> %s%n", befehl);
-        datenbank.executeUpdate(befehl);
+        try {
+          // Falls schon eine Tabelle mit dem Namen "einkaufszettel" existiert, dann alte Tabelle löschen ...  
+          String befehl = "DROP TABLE IF EXISTS Produkt42";
+          System.out.printf(">> %s%n", befehl);
+          datenbank.executeUpdate(befehl);
+          
+          // ... neue Tabelle "einkaufszettel" erstellen ... 
+          befehl = "CREATE TABLE Produkt42 (ProduktNr INT UNSIGNED PRIMARY KEY, Name VARCHAR(30) NOT NULL, Preis DECIMAL(10,2) NOT NULL)";
+          System.out.printf(">> %s%n", befehl);
+          datenbank.executeUpdate(befehl);
+          
+          // ... und Beispielwerte einfügen.  
+          befehl = "INSERT INTO Produkt42 VALUES (1, 'Salami', 3.98);";
+          System.out.printf(">> %s%n", befehl);
+          datenbank.executeUpdate(befehl); 
+          
+          // ... und Beispielwerte einfügen.  
+          befehl = "INSERT INTO Produkt42 VALUES (2, 'Hummus', 2.49);";
+          System.out.printf(">> %s%n", befehl);
+          datenbank.executeUpdate(befehl); 
+          
+          
+          
+          befehl = "CREATE TABLE Kategorie42 (ProduktNr INT UNSIGNED PRIMARY KEY, Name VARCHAR(30) NOT NULL, Preis DECIMAL(10,2) NOT NULL)";
+          System.out.printf(">> %s%n", befehl);
+          datenbank.executeUpdate(befehl);
+          
+        } catch (SQLException e) {
+          // Mögliche Fehler beim Ausführen des Befehls abfangen und Fehlermeldung ausgeben
+          // ... das ist die Reaktion darauf, wenn bei dem Programmteil in einem "try" etwas schief geht
+          System.out.printf("FEHLER: %s%n", e.getMessage());
+        } 
         
-        // ... und Beispielwerte einfügen.  
-        befehl = "INSERT INTO einkaufszettel42 VALUES (1, 'Salami', 5, 3.98);";
-        System.out.printf(">> %s%n", befehl);
-        datenbank.executeUpdate(befehl); 
-        
-        // ... und Beispielwerte einfügen.  
-        befehl = "INSERT INTO einkaufszettel42 VALUES (2, 'Hummus', 1, 2.49);";
-        System.out.printf(">> %s%n", befehl);
-        datenbank.executeUpdate(befehl); 
-        
-      } catch (SQLException e) {
-        // Mögliche Fehler beim Ausführen des Befehls abfangen und Fehlermeldung ausgeben
-        // ... das ist die Reaktion darauf, wenn bei dem Programmteil in einem "try" etwas schief geht
-        System.out.printf("FEHLER: %s%n", e.getMessage());
-      } 
-      
-      try {
-        // Die gesamte aktive Tabelle wird zum überprüfen einmal ausgegeben
-        String abfrage = "SELECT * FROM einkaufszettel42";
-        System.out.printf(">> %s%n", abfrage);
-        ergebnis = datenbank.executeQuery(abfrage);
-        
-        // Zuerst Spaltenüberschriften ausgeben ... 
-        for  (int i = 1; i<= ergebnis.getMetaData().getColumnCount(); i++){
-          System.out.print(ergebnis.getMetaData().getColumnName(i) + "\t \t");
-        }
-        System.out.println();
-        
-        // ... und dann die Datensätze
-        // Tip: der Befehl next() lässt sich auf Objekte vom Datentyp ResultSet anwenden (hier "ergebnis")
-        //      und bewirkt, dass die nächste Zeile der Ergebnistabelle zur aktiven Zeile wird, deren
-        //      Daten dann ausgelesen werden können. next() liefert außerdem eine Rückgabe vom Typ boolean.
-        //      Diese ist "true", wenn es eine nächste Zeile gab, zu der gesprungen werden konnte und
-        //      "false" falls es keine nächste Zeile im ResultSet mehr gab (Ende der Tabelle)
-        while (ergebnis.next()) {
-          for (int i = 1; i<=ergebnis.getMetaData().getColumnCount(); i++) {
-            System.out.print(ergebnis.getString(i) + "\t \t");  
+        try {
+          // Die gesamte aktive Tabelle wird zum überprüfen einmal ausgegeben
+          String abfrage = "SELECT * FROM Produkt42";
+          System.out.printf(">> %s%n", abfrage);
+          ergebnis = datenbank.executeQuery(abfrage);
+          
+          // Zuerst Spaltenüberschriften ausgeben ... 
+          for  (int i = 1; i<= ergebnis.getMetaData().getColumnCount(); i++){
+            System.out.print(ergebnis.getMetaData().getColumnName(i) + "\t \t");
           }
           System.out.println();
-        }
+          
+          // ... und dann die Datensätze
+          // Tip: der Befehl next() lässt sich auf Objekte vom Datentyp ResultSet anwenden (hier "ergebnis")
+          //      und bewirkt, dass die nächste Zeile der Ergebnistabelle zur aktiven Zeile wird, deren
+          //      Daten dann ausgelesen werden können. next() liefert außerdem eine Rückgabe vom Typ boolean.
+          //      Diese ist "true", wenn es eine nächste Zeile gab, zu der gesprungen werden konnte und
+          //      "false" falls es keine nächste Zeile im ResultSet mehr gab (Ende der Tabelle)
+          while (ergebnis.next()) {
+            for (int i = 1; i<=ergebnis.getMetaData().getColumnCount(); i++) {
+              System.out.print(ergebnis.getString(i) + "\t \t");  
+            }
+            System.out.println();
+          }
+          
+        } catch (SQLException e) {
+          // Mögliche Fehler beim Ausführen der Abfrage abfangen und Fehlermeldung ausgeben
+          System.out.printf("FEHLER: %s%n", e.getMessage());
+        }  
+        
+        // Verbindung zur Datenbank trennen
+        datenbank.disconnect();
         
       } catch (SQLException e) {
-        // Mögliche Fehler beim Ausführen der Abfrage abfangen und Fehlermeldung ausgeben
+        // Gibt eine Fehlermeldung aus und beendet die Anwendung, falls beim Verbinden mit der Datenbank ein Problem aufgetreten ist
         System.out.printf("FEHLER: %s%n", e.getMessage());
-      }  
-      
-      // Verbindung zur Datenbank trennen
-      datenbank.disconnect();
-      
-    } catch (SQLException e) {
-      // Gibt eine Fehlermeldung aus und beendet die Anwendung, falls beim Verbinden mit der Datenbank ein Problem aufgetreten ist
-      System.out.printf("FEHLER: %s%n", e.getMessage());
-      System.exit(1);
-    }
-  }                              
+        System.exit(1);
+      }
+    }         
+  }                     
 }

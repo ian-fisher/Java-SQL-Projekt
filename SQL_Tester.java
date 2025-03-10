@@ -30,24 +30,30 @@ class SQL_Tester {
         
         try {
           // Falls schon eine Tabelle mit dem Namen "einkaufszettel" existiert, dann alte Tabelle löschen ...  
-          String befehl = "DROP TABLE IF EXISTS einkaufszettel42";
+          String befehl = "DROP TABLE IF EXISTS Produkt42";
           System.out.printf(">> %s%n", befehl);
           datenbank.executeUpdate(befehl);
           
           // ... neue Tabelle "einkaufszettel" erstellen ... 
-          befehl = "CREATE TABLE einkaufszettel42 (nummer INT(6) UNSIGNED PRIMARY KEY, name VARCHAR(30) NOT NULL, anzahl INT(3) NOT NULL, preis DECIMAL(10,2) NOT NULL)";
+          befehl = "CREATE TABLE Produkt42 (ProduktNr INT UNSIGNED PRIMARY KEY, Name VARCHAR(30) NOT NULL, Preis DECIMAL(10,2) NOT NULL)";
           System.out.printf(">> %s%n", befehl);
           datenbank.executeUpdate(befehl);
           
           // ... und Beispielwerte einfügen.  
-          befehl = "INSERT INTO einkaufszettel42 VALUES (1, 'Salami', 5, 3.98);";
+          befehl = "INSERT INTO Produkt42 VALUES (1, 'Salami', 3.98);";
           System.out.printf(">> %s%n", befehl);
           datenbank.executeUpdate(befehl); 
           
           // ... und Beispielwerte einfügen.  
-          befehl = "INSERT INTO einkaufszettel42 VALUES (2, 'Hummus', 1, 2.49);";
+          befehl = "INSERT INTO Produkt42 VALUES (2, 'Hummus', 2.49);";
           System.out.printf(">> %s%n", befehl);
           datenbank.executeUpdate(befehl); 
+          
+          
+          
+          befehl = "CREATE TABLE Kategorie42 (ProduktNr INT UNSIGNED PRIMARY KEY, Name VARCHAR(30) NOT NULL, SteuerklasseProzent DECIMAL(10,2) NOT NULL)";
+          System.out.printf(">> %s%n", befehl);
+          datenbank.executeUpdate(befehl);
           
         } catch (SQLException e) {
           // Mögliche Fehler beim Ausführen des Befehls abfangen und Fehlermeldung ausgeben
@@ -57,7 +63,7 @@ class SQL_Tester {
         
         try {
           // Die gesamte aktive Tabelle wird zum überprüfen einmal ausgegeben
-          String abfrage = "SELECT * FROM einkaufszettel42";
+          String abfrage = "SELECT * FROM Produkt42";
           System.out.printf(">> %s%n", abfrage);
           ergebnis = datenbank.executeQuery(abfrage);
           
