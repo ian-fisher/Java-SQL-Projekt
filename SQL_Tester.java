@@ -3,6 +3,11 @@ import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
 class SQL_Tester {
   
+  /*Formatierung:
+   *  Prozenten - "xxx.xx"
+   *  Datum - "DDMMYYYY"
+  */
+  
   public static void main(String[] args) {
     // Ist aktuell für eine Verbindung zu dem verwendeten XAMPP-Server eingerichtet
     // --> für Zugriff auf eine andere Datenbank die Parameter entsprechend anpassen
@@ -30,30 +35,67 @@ class SQL_Tester {
         
         try {
           // Falls schon eine Tabelle mit dem Namen "einkaufszettel" existiert, dann alte Tabelle löschen ...  
-          String befehl = "DROP TABLE IF EXISTS Produkt42";
+          String befehl = "DROP TABLE IF EXISTS LIKE '%42'";
           System.out.printf(">> %s%n", befehl);
           datenbank.executeUpdate(befehl);
           
-          // ... neue Tabelle "einkaufszettel" erstellen ... 
+          // ... neue Tabellen (Ohne Fremdschlüssel Attributen) erstellen
           befehl = "CREATE TABLE Produkt42 (ProduktNr INT UNSIGNED PRIMARY KEY, Name VARCHAR(30) NOT NULL, Preis DECIMAL(10,2) NOT NULL)";
           System.out.printf(">> %s%n", befehl);
           datenbank.executeUpdate(befehl);
           
-          // ... und Beispielwerte einfügen.  
-          befehl = "INSERT INTO Produkt42 VALUES (1, 'Salami', 3.98);";
-          System.out.printf(">> %s%n", befehl);
-          datenbank.executeUpdate(befehl); 
           
-          // ... und Beispielwerte einfügen.  
-          befehl = "INSERT INTO Produkt42 VALUES (2, 'Hummus', 2.49);";
-          System.out.printf(">> %s%n", befehl);
-          datenbank.executeUpdate(befehl); 
-          
-          
-          
-          befehl = "CREATE TABLE Kategorie42 (ProduktNr INT UNSIGNED PRIMARY KEY, Name VARCHAR(30) NOT NULL, SteuerklasseProzent DECIMAL(10,2) NOT NULL)";
+          befehl = "CREATE TABLE Kategorie42 (ProduktNr INT UNSIGNED PRIMARY KEY, Name VARCHAR(30) NOT NULL, SteuerklasseProzent DECIMAL(5,2) NOT NULL)";
           System.out.printf(">> %s%n", befehl);
           datenbank.executeUpdate(befehl);
+          
+          
+          befehl = "CREATE TABLE Filiale42 (FilialeNr INT UNSIGNED PRIMARY KEY, Name VARCHAR(30) NOT NULL, Strasse VARCHAR(30) NOT NULL, Nr INT UNSIGNED)";
+          System.out.printf(">> %s%n", befehl);
+          datenbank.executeUpdate(befehl);
+          
+          
+          befehl = "CREATE TABLE Lieferant42 (LieferantNr INT UNSIGNED PRIMARY KEY, Name VARCHAR(30) NOT NULL, Strasse VARCHAR(30) NOT NULL, Nr INT UNSIGNED)"; //
+          System.out.printf(">> %s%n", befehl);
+          datenbank.executeUpdate(befehl);
+          
+          
+          befehl = "CREATE TABLE Kasse42 (KasseNr VARCHAR(30) NOT NULL PRIMARY KEY)";
+          System.out.printf(">> %s%n", befehl);
+          datenbank.executeUpdate(befehl);
+          
+          
+          befehl = "CREATE TABLE Mitarbeiter42 (MitarbeiterNr INT UNSIGNED PRIMARY KEY, Vorname VARCHAR(30) NOT NULL, Name VARCHAR(30) NOT NULL)";
+          System.out.printf(">> %s%n", befehl);
+          datenbank.executeUpdate(befehl);
+          
+          //rabatt mechanics unclear
+          befehl = "CREATE TABLE Einkauf42 (EinkaufNr INT UNSIGNED PRIMARY KEY, Uhrzeit INT UNSIGNED, Datum INT UNSIGNED, RabattProzent DECIMAL(5,2) NOT NULL)";
+          System.out.printf(">> %s%n", befehl);
+          datenbank.executeUpdate(befehl);
+          
+          //KartenNr??
+          befehl = "CREATE TABLE EC_Zahlung42 (EC_ZahlungNr INT UNSIGNED PRIMARY KEY, KartenNr INT UNSIGNED, IBAN INT UNSIGNED, Betrag INT UNSIGNED, InhaberVorname VARCHAR(30) NOT NULL, InhaberName VARCHAR(30) NOT NULL)";
+          System.out.printf(">> %s%n", befehl);
+          datenbank.executeUpdate(befehl);
+          
+          
+          befehl = "CREATE TABLE Kundenkonto42 (KontoNr INT UNSIGNED PRIMARY KEY, Bonuspunkte INT UNSIGNED)";
+          System.out.printf(">> %s%n", befehl);
+          datenbank.executeUpdate(befehl);
+          
+          
+          befehl = "CREATE TABLE Bestellung42 (BestellungNr INT UNSIGNED PRIMARY KEY, Datum INT UNSIGNED)";
+          System.out.printf(">> %s%n", befehl);
+          datenbank.executeUpdate(befehl);
+          
+          
+          
+          //BeziehungsTabellen erstellen
+          
+//          befehl = "CREATE TABLE inventur42 ( PRIMARY KEY)";
+//          System.out.printf(">> %s%n", befehl);
+//          datenbank.executeUpdate(befehl);
           
         } catch (SQLException e) {
           // Mögliche Fehler beim Ausführen des Befehls abfangen und Fehlermeldung ausgeben
