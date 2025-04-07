@@ -1,0 +1,67 @@
+/*Creating Entitäten with Primary keys*/
+CREATE TABLE Produkt(
+  ProduktNr INT UNSIGNED PRIMARY KEY,
+  Name VARCHAR(30) NOT NULL, 
+  Preis DECIMAL(10,2) NOT NULL
+);
+
+CREATE TABLE Kategorie(
+  Name VARCHAR(30) NOT NULL PRIMARY KEY, 
+  SteuerklasseProzent DECIMAL(5,2) NOT NULL
+);
+
+CREATE TABLE Filiale(
+  FilialeNr INT UNSIGNED PRIMARY KEY, 
+  Name VARCHAR(30) NOT NULL, 
+  Strasse VARCHAR(30) NOT NULL, 
+  Nr INT UNSIGNED
+);
+
+CREATE TABLE Lieferant(
+  LieferantNr INT UNSIGNED PRIMARY KEY, 
+  Name VARCHAR(30) NOT NULL, 
+  Strasse VARCHAR(30) NOT NULL, 
+  Nr INT UNSIGNED
+);
+
+CREATE TABLE Kasse       (
+  KassenNr INT UNSIGNED PRIMARY KEY
+);
+
+CREATE TABLE Mitarbeiter (
+  MitarbeiterNr INT UNSIGNED PRIMARY KEY, 
+  Vorname VARCHAR(30) NOT NULL, 
+  Name VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE Einkauf     (
+  EinkaufNr INT UNSIGNED PRIMARY KEY, 
+  Uhrzeit INT UNSIGNED, 
+  Datum INT UNSIGNED, 
+  RabattProzent DECIMAL(5,2) NOT NULL
+);
+
+CREATE TABLE EC_Zahlung  (
+  EC_ZahlungNr INT UNSIGNED PRIMARY KEY, 
+  KartenNr INT UNSIGNED, 
+  IBAN INT UNSIGNED, 
+  Betrag INT UNSIGNED, 
+  InhaberVorname VARCHAR(30) NOT NULL, 
+  InhaberName VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE Kundenkonto (
+  KontoNr INT UNSIGNED PRIMARY KEY, 
+  Bonuspunkte INT UNSIGNED
+);
+
+CREATE TABLE Bestellung  (
+  BestellungNr  INT UNSIGNED PRIMARY KEY, 
+  Datum INT UNSIGNED
+);
+
+CREATE TABLE Ort         (
+  OrtNr INT UNSIGNED PRIMARY KEY,
+  Name VARCHAR(30) NOT NULL,
+  PLZ INT UNSIGNED
+);

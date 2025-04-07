@@ -1,0 +1,17 @@
+SQL_Tester.java:2: Fehler: Package com.mysql.jdbc.jdbc2.optional ist nicht vorhanden
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+                                    ^
+C:\Users\Caspar\Desktop\Schule\11.Klasse\Informatik\Java-SQL-Projekt\MySQLConnector.java:5: Fehler: Package com.mysql.jdbc.jdbc2.optional ist nicht vorhanden
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+                                    ^
+C:\Users\Caspar\Desktop\Schule\11.Klasse\Informatik\Java-SQL-Projekt\MySQLConnector.java:9: Fehler: Symbol nicht gefunden
+  private MysqlDataSource ds;
+          ^
+  Symbol: Klasse MysqlDataSource
+  Ort: Klasse MySQLConnector
+C:\Users\Caspar\Desktop\Schule\11.Klasse\Informatik\Java-SQL-Projekt\MySQLConnector.java:14: Fehler: Symbol nicht gefunden
+    ds = new MysqlDataSource();
+             ^
+  Symbol: Klasse MysqlDataSource
+  Ort: Klasse MySQLConnector
+4 Fehler

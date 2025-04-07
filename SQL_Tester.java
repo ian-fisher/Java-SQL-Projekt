@@ -1,5 +1,7 @@
 import java.sql.*;
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+import java.nio.file.*;
+import java.io.File;
 
 class SQL_Tester {
   
@@ -12,7 +14,7 @@ class SQL_Tester {
     // Ist aktuell für eine Verbindung zu dem verwendeten XAMPP-Server eingerichtet
     // --> für Zugriff auf eine andere Datenbank die Parameter entsprechend anpassen
     // --> die Parameter des MySQLConnector sind wie folgt strukturiert (benutzername, passwort, IP-Adresse des Datenbankservers, name der zu verwendenden Datenbank auf dem Server)
-    MySQLConnector datenbank = new MySQLConnector("d0425602", "11-htz-lk-W", "w01ba120.kasserver.com", "d0425602");
+    MySQLConnector datenbank = new MySQLConnector("d0430a00", "11-htz-lk-JAYC", "w01ba120.kasserver.com", "d0430a00");
     
     // In dem Datentyp "ResultSet" können die Ergebnisse einer Datenbankabfrage gespeichert werden.
     // Eine Dokumentation des Datentyps (Wie funktioniert er/Welche Methoden hat er) erhaltet ihr,
@@ -24,7 +26,7 @@ class SQL_Tester {
       System.out.printf("disconnected");
     } catch (SQLException e) {
       // Gibt eine Fehlermeldung aus und beendet die Anwendung, falls beim Verbinden mit der Datenbank ein Problem aufgetreten ist
-      System.out.printf("FEHLER: %s%n", e.getMessage());
+      System.out.printf("FEHLER: %s%n%n%n", e.getMessage());
     } finally {
       
       try {
@@ -33,79 +35,70 @@ class SQL_Tester {
         // abzufangen und auf sie zu reagieren, statt das Program bei einem Fehler direkt zu beenden
         datenbank.connect();
         
-        try {
-          // Falls schon eine Tabelle mit dem Namen "einkaufszettel" existiert, dann alte Tabelle löschen ...  
-          String befehl = "DROP TABLE IF EXISTS LIKE '%42'";
-          System.out.printf(">> %s%n", befehl);
-          datenbank.executeUpdate(befehl);
-          
-          // ... neue Tabellen (Ohne Fremdschlüssel Attributen) erstellen
-          befehl = "CREATE TABLE Produkt42 (ProduktNr INT UNSIGNED PRIMARY KEY, Name VARCHAR(30) NOT NULL, Preis DECIMAL(10,2) NOT NULL)";
-          System.out.printf(">> %s%n", befehl);
-          datenbank.executeUpdate(befehl);
-          
-          
-          befehl = "CREATE TABLE Kategorie42 (ProduktNr INT UNSIGNED PRIMARY KEY, Name VARCHAR(30) NOT NULL, SteuerklasseProzent DECIMAL(5,2) NOT NULL)";
-          System.out.printf(">> %s%n", befehl);
-          datenbank.executeUpdate(befehl);
-          
-          
-          befehl = "CREATE TABLE Filiale42 (FilialeNr INT UNSIGNED PRIMARY KEY, Name VARCHAR(30) NOT NULL, Strasse VARCHAR(30) NOT NULL, Nr INT UNSIGNED)";
-          System.out.printf(">> %s%n", befehl);
-          datenbank.executeUpdate(befehl);
-          
-          
-          befehl = "CREATE TABLE Lieferant42 (LieferantNr INT UNSIGNED PRIMARY KEY, Name VARCHAR(30) NOT NULL, Strasse VARCHAR(30) NOT NULL, Nr INT UNSIGNED)"; //
-          System.out.printf(">> %s%n", befehl);
-          datenbank.executeUpdate(befehl);
-          
-          
-          befehl = "CREATE TABLE Kasse42 (KasseNr VARCHAR(30) NOT NULL PRIMARY KEY)";
-          System.out.printf(">> %s%n", befehl);
-          datenbank.executeUpdate(befehl);
-          
-          
-          befehl = "CREATE TABLE Mitarbeiter42 (MitarbeiterNr INT UNSIGNED PRIMARY KEY, Vorname VARCHAR(30) NOT NULL, Name VARCHAR(30) NOT NULL)";
-          System.out.printf(">> %s%n", befehl);
-          datenbank.executeUpdate(befehl);
-          
-          //rabatt mechanics unclear
-          befehl = "CREATE TABLE Einkauf42 (EinkaufNr INT UNSIGNED PRIMARY KEY, Uhrzeit INT UNSIGNED, Datum INT UNSIGNED, RabattProzent DECIMAL(5,2) NOT NULL)";
-          System.out.printf(">> %s%n", befehl);
-          datenbank.executeUpdate(befehl);
-          
-          //KartenNr??
-          befehl = "CREATE TABLE EC_Zahlung42 (EC_ZahlungNr INT UNSIGNED PRIMARY KEY, KartenNr INT UNSIGNED, IBAN INT UNSIGNED, Betrag INT UNSIGNED, InhaberVorname VARCHAR(30) NOT NULL, InhaberName VARCHAR(30) NOT NULL)";
-          System.out.printf(">> %s%n", befehl);
-          datenbank.executeUpdate(befehl);
-          
-          
-          befehl = "CREATE TABLE Kundenkonto42 (KontoNr INT UNSIGNED PRIMARY KEY, Bonuspunkte INT UNSIGNED)";
-          System.out.printf(">> %s%n", befehl);
-          datenbank.executeUpdate(befehl);
-          
-          
-          befehl = "CREATE TABLE Bestellung42 (BestellungNr INT UNSIGNED PRIMARY KEY, Datum INT UNSIGNED)";
-          System.out.printf(">> %s%n", befehl);
-          datenbank.executeUpdate(befehl);
-          
-          
-          
-          //BeziehungsTabellen erstellen
-          
-//          befehl = "CREATE TABLE inventur42 ( PRIMARY KEY)";
-//          System.out.printf(">> %s%n", befehl);
-//          datenbank.executeUpdate(befehl);
-          
-        } catch (SQLException e) {
-          // Mögliche Fehler beim Ausführen des Befehls abfangen und Fehlermeldung ausgeben
-          // ... das ist die Reaktion darauf, wenn bei dem Programmteil in einem "try" etwas schief geht
-          System.out.printf("FEHLER: %s%n", e.getMessage());
-        } 
+        String Constraints[] = new String[]{"FS_Lieferant_Ort", "FS_Filiale_Ort", "FS_Produkt_Kategorie", "FS_Kasse_Filiale", "FS_Mitarbeiter_Filiale", "FS_Bestellung_Filiale", "FS_Einkauf_Kasse", "FS_Einkauf_Mitarbeiter", "FS_Einkauf_Kundenkonto", "FS_Einkauf_EC_Zahlung"};
+        for(String Constraintname : Constraints){   
+          try {
+            String befehl = "Alter table " +Constraintname.split("_")[1]+ " Drop constraint " + Constraintname;
+            System.out.printf(">> %s%n", befehl);
+            datenbank.executeUpdate(befehl);
+          } catch(Exception e) {
+            System.out.printf("FEHLER: %s%n", e.getMessage());
+          } 
+        }
         
-        try {
+        String Tables[] = new String[]{"Produkt", "Kategorie", "Filiale", "Lieferant", "Kasse", "Mitarbeiter", "Einkauf", "EC_Zahlung", "Kundenkonto", "Bestellung", "Ort"};
+        for(String Tablename : Tables){   
+          try {
+            String befehl = "Drop table " + Tablename;
+            System.out.printf(">> %s%n", befehl);
+            datenbank.executeUpdate(befehl);
+          } catch(Exception e) {
+            System.out.printf("FEHLER: %s%n", e.getMessage());
+          } 
+        }
+        
+        try{
+          String DDfile = new String(Files.readAllBytes( (new File("./Datendefinition.sql")).toPath() ));
+        
+        
+          for (String befehl : DDfile.split(";")) {
+            try {
+              System.out.printf(">> %s%n", befehl);
+              datenbank.executeUpdate(befehl);
+            } catch (Exception e) {
+              // Mögliche Fehler beim Ausführen des Befehls abfangen und Fehlermeldung ausgeben
+              // ... das ist die Reaktion darauf, wenn bei dem Programmteil in einem "try" etwas schief geht
+              System.out.printf("FEHLER: %s%n", e.getMessage());
+            } 
+          } // end of for
+          
+        }catch(Exception e){
+          System.out.printf("Fehler: %s%n", e.getMessage());
+        }
+             
+        
+        try{
+          String DDfile = new String(Files.readAllBytes( (new File("./Fremdschluesseln.sql")).toPath() ));
+        
+        
+          for (String befehl : DDfile.split(";")) {
+            try {
+              System.out.printf(">> %s%n", befehl);
+              datenbank.executeUpdate(befehl);
+            } catch (Exception e) {
+              // Mögliche Fehler beim Ausführen des Befehls abfangen und Fehlermeldung ausgeben
+              // ... das ist die Reaktion darauf, wenn bei dem Programmteil in einem "try" etwas schief geht
+              System.out.printf("FEHLER: %s%n", e.getMessage());
+            } 
+          } // end of for
+          
+        }catch(Exception e){
+          System.out.printf("Fehler: %s%n", e.getMessage());
+        }
+        
+        /*try {
           // Die gesamte aktive Tabelle wird zum überprüfen einmal ausgegeben
-          String abfrage = "SELECT * FROM Produkt42";
+          String abfrage = "SELECT * FROM Produkt";
           System.out.printf(">> %s%n", abfrage);
           ergebnis = datenbank.executeQuery(abfrage);
           
@@ -131,7 +124,7 @@ class SQL_Tester {
         } catch (SQLException e) {
           // Mögliche Fehler beim Ausführen der Abfrage abfangen und Fehlermeldung ausgeben
           System.out.printf("FEHLER: %s%n", e.getMessage());
-        }  
+        } */ 
         
         // Verbindung zur Datenbank trennen
         datenbank.disconnect();
