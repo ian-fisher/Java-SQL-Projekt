@@ -13,22 +13,6 @@ CREATE TABLE lieferung (
   Status TEXT
   );
   
-CREATE TABLE zahlen (
-  UNSIGNED PRIMARY KEY(EinkaufNr UNDIGNED INT, EC-ZahlungsNr UNSIGNED INT)
-  );
-  
-CREATE TABLE hat_kundenkonto (
-  UNSIGNED PRIMARY KEY(EinkaufNr UNSIGNED INT, KundenkkontoNr UNSIGNED INT)
-  );
-  
-CREATE TABLE gekauft (
-  UNSIGNED PRIMARY KEY (KassenNr UNSIGNED INT, EinkaufNr UNSIGNED INT)
-  );
-  
-CREATE TABLE bearbeitet (
-  UNSIGNED PRIMARY KEY (EinkaufNr UNSIGNED INT, MitarbeiterNr UNSIGNED INT)
-  );
-  
 CREATE TABLE rabatt (
   UNSIGNED PRIMARY KEY (ProduKtNr UNSIGNED INT, FilialeNr UNSIGNED INT),
   RabattProzent UNSIGNED FLOAT
@@ -39,9 +23,4 @@ CREATE TABLE enthaelt (
   Menge UNSIGNED INT,
   Steuer UNSIGNED FLOAT
   );
-  
-CREATE TABLE arbeitet_in (
-  UNSIGNED PRIMARY KEY (MitarbeiterNr UNSIGNED INT, FilialeNr UNSIGNED INT)
-  );
-  
                 
