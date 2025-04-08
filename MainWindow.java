@@ -1,10 +1,11 @@
 import javax.swing.*;
 import java.awt.*;
+import java.sql.SQLException;
 
 public class MainWindow extends JFrame {
     private String currentUser; // the username of the logged-in worker
     MySQLConnector datenbank;
-    public MainWindow(String currentUser, MySQLConnector datenbank) {
+    public MainWindow(String currentUser, MySQLConnector datenbank) throws SQLException {
         this.currentUser = currentUser;
         this.datenbank = datenbank;
         setTitle("Grocery Store Management - Logged in as: " + currentUser);

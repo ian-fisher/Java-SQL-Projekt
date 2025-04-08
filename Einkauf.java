@@ -4,28 +4,29 @@ import java.util.*;
 
 public class Einkauf {
     MySQLConnector datenbank;
+    ProduktListe produktListe;
     private List<int[]> Produkte = new ArrayList<int[]>();
-    private List<String> ProdukteNamen = new ArrayList<>();
 
-    Einkauf(MySQLConnector datenbank) {
+    Einkauf(MySQLConnector datenbank, ProduktListe produktListe) {
         this.datenbank = datenbank;
+        this.produktListe = produktListe;
     }
 
-    public void addProdukt(String name, int Id, int Anzahl) {
-        for (int i = 0; i < Produkte.size(); i++) {
-            if (Produkte.get(i)[0] == Id) {
-                Produkte.get(i)[1] += Anzahl;
+    public void addProdukt(int i, int Menge) {
+        for (int j = 0; j < Produkte.size(); j++) {
+            if (Produkte.get(j)[0] == i) {
+                Produkte.get(j)[1] += Menge;
                 return;
             }
         }
-        Produkte.add(new int[]{Id, Anzahl});
-        ProdukteNamen.add(name);
+        Produkte.add(new int[]{i, Menge});
     }
     public String BelegErstellen() {
         String beleg = "";
         for (int i = 0; i < Produkte.size(); i++) {
-            beleg += ProdukteNamen.get(i) + " ";
+            beleg += produktListe.ProdukteNamen[Produkte.get(i)[0]] + " ";
             beleg += "x" + Produkte.get(i)[1] + "\n";
+            beleg += produktListe.ProduktePreisen[Produkte.get(i)[0]] * Produkte.get(i)[1] + "€" + "\n";
         }
         return beleg;
     }
@@ -36,7 +37,20 @@ public class Einkauf {
         while (ergebnis.next()) {
             EinkaufNr = ergebnis.getInt("EinkaufNr") + 1;
         }
-        abfrage = "INSERT INTO Einkauf (EinkaufNr, Uhrzeit, Datum, RabattProzent, KassenNr, MitarbeiterNr, KontoNr, EC_ZahlungNr) VALUES ('" + EinkaufNr + "', '1', '1', '1', '3', '1', '1', '1'";
-        datenbank.executeQuery(abfrage);
+        System.out.println(EinkaufNr);
+        abfrage = "INSERT INTO `Einkauf` (`EinkaufNr`, `Uhrzeit`, `Jahr`, `Monat`, `Tag`, `RabattProzent`, `KassenNr`, `MitarbeiterNr`, `KontoNr`, `EC_ZahlungNr`) VALUES ('" + EinkaufNr + "', '00:00:00', NULL, NULL, NULL, '0.00', NULL, NULL, NULL, NULL);";
+        try {
+            datenbank.executeUpdate(abfrage);
+        }  catch (SQLException e) {
+            System.out.printf("FEHLER: %s%n%n%n", e.getMessage());
+        }
+        for (int[] ints : Produkte) {
+            abfrage = "INSERT INTO `enthaelt` (`EinkaufNr`, `ProduktNr`, `Menge`, `Steuer`) VALUES ('" + EinkaufNr + "', '" + ints[0] + "', '" + ints[1] + "', '0')";
+            try {
+                datenbank.executeUpdate(abfrage);
+            } catch (SQLException e) {
+                System.out.printf("FEHLER: %s%n%n%n", e.getMessage());
+            }
+        }
     }
 }

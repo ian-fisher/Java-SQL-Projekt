@@ -4,24 +4,23 @@ import java.awt.event.*;
 import java.sql.*;
 
 public class CreateReceiptPanel extends JPanel {
-    private JComboBox<String> branchComboBox;
-    private JButton createReceiptButton;
     private String currentUser;
     private Einkauf einkauf;
     MySQLConnector datenbank;
-    public CreateReceiptPanel(String currentUser, MySQLConnector datenbank) {
+    public CreateReceiptPanel(String currentUser, MySQLConnector datenbank) throws SQLException {
         this.currentUser = currentUser;
         this.datenbank = datenbank;
+        ProduktListe liste = new ProduktListe(datenbank);
         setLayout(null);
-        einkauf = new Einkauf(datenbank);
+        einkauf = new Einkauf(datenbank, liste);
         JLabel SelectProduct = new JLabel("Produkt auswaehlen:");
         SelectProduct.setBounds(50, 50, 150, 20);
         add(SelectProduct);
 
-        String[] Produkte = {"ADOLF", "HITLER", "nigga1", "nigga2", "Jaewon"};
-        JComboBox ProduktListe = new JComboBox(Produkte);
-        ProduktListe.setBounds(200, 50, 100, 20);
-        add(ProduktListe);
+        String[] Produkte = liste.ProdukteNamen;
+        JComboBox produktListe = new JComboBox(Produkte);
+        produktListe.setBounds(200, 50, 175, 20);
+        add(produktListe);
 
         JLabel oder = new JLabel("oder");
         oder.setBounds(150, 75, 100, 20);
@@ -33,27 +32,27 @@ public class CreateReceiptPanel extends JPanel {
 
         JTextField ProduktId = new JTextField();
         ProduktId.setEditable(true);
-        ProduktId.setBounds(200, 100, 100, 20);
+        ProduktId.setBounds(200, 100, 175, 20);
         add(ProduktId);
 
-        JLabel AnzahlLabel = new JLabel("Anzahl:");
-        AnzahlLabel.setBounds(50, 150, 100, 20);
-        add(AnzahlLabel);
+        JLabel MengeLabel = new JLabel("Menge:");
+        MengeLabel.setBounds(50, 150, 100, 20);
+        add(MengeLabel);
 
-        JTextField Anzahl = new JTextField("0");
-        Anzahl.setEditable(true);
-        Anzahl.setBounds(150, 150, 40, 20);
-        add(Anzahl);
+        JTextField Menge = new JTextField("0");
+        Menge.setEditable(true);
+        Menge.setBounds(150, 150, 40, 20);
+        add(Menge);
 
         JButton AnzahlErhoehen = new JButton("+");
         AnzahlErhoehen.setBounds(200, 150, 20, 20);
         add(AnzahlErhoehen);
         AnzahlErhoehen.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (Anzahl.getText().matches("-?\\d+(\\.\\d+)?")) {
-                    int anzahl = Integer.parseInt(Anzahl.getText());
+                if (Menge.getText().matches("-?\\d+(\\.\\d+)?")) {
+                    int anzahl = Integer.parseInt(Menge.getText());
                     anzahl++;
-                    Anzahl.setText(String.valueOf(anzahl));
+                    Menge.setText(String.valueOf(anzahl));
                 }
             }
         });
@@ -63,13 +62,13 @@ public class CreateReceiptPanel extends JPanel {
         add(AnzahlVerringern);
         AnzahlVerringern.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (Anzahl.getText().matches("-?\\d+(\\.\\d+)?")) {
-                    int anzahl = Integer.parseInt(Anzahl.getText());
+                if (Menge.getText().matches("-?\\d+(\\.\\d+)?")) {
+                    int anzahl = Integer.parseInt(Menge.getText());
                     anzahl--;
                     if (anzahl < 0) {
                         anzahl = 0;
                     }
-                    Anzahl.setText(String.valueOf(anzahl));
+                    Menge.setText(String.valueOf(anzahl));
                 }
             }
         });
@@ -79,14 +78,28 @@ public class CreateReceiptPanel extends JPanel {
         beleg.setBounds(400, 50, 200, 200);
         add(beleg);
 
-        JButton AddToReceiptButton = new JButton("Add To Receipt");
-        AddToReceiptButton.setBounds(150, 200, 100, 20);
+        JButton AddToReceiptButton = new JButton("Zum Einkauf hinzufuegen");
+        AddToReceiptButton.setBounds(100, 200, 200, 20);
         add(AddToReceiptButton);
         AddToReceiptButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (Anzahl.getText().matches("-?\\d+(\\.\\d+)?")) {
-                    einkauf.addProdukt("aboba", 52, Integer.parseInt(Anzahl.getText()));
-                    beleg.setText(einkauf.BelegErstellen());
+                if (Menge.getText().matches("-?\\d+(\\.\\d+)?")) {
+                    if (Integer.parseInt(Menge.getText()) > 0) {
+                        if (produktListe.getSelectedIndex() == 0) {
+                            if (ProduktId.getText().matches("-?\\d+(\\.\\d+)?")) {
+                                int id = Integer.parseInt(ProduktId.getText());
+                                for (int i = 1; i < liste.ProdukteId.length; i++) {
+                                    if (liste.ProdukteId[i] == id) {
+                                        einkauf.addProdukt(i, Integer.parseInt(Menge.getText()));
+                                        beleg.setText(einkauf.BelegErstellen());
+                                    }
+                                }
+                            }
+                        } else {
+                            einkauf.addProdukt(produktListe.getSelectedIndex(), Integer.parseInt(Menge.getText()));
+                            beleg.setText(einkauf.BelegErstellen());
+                        }
+                    }
                 } else {
                     System.out.println("Anzahl muss eine Nummer sein");
                 }
