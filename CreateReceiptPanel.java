@@ -109,7 +109,7 @@ public class CreateReceiptPanel extends JPanel {
         });
 
         JButton EinkaufBeenden = new JButton("Einkauf beenden");
-        EinkaufBeenden.setBounds(125, 300, 150, 20);
+        EinkaufBeenden.setBounds(125, 250, 150, 20);
         add(EinkaufBeenden);
         EinkaufBeenden.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
