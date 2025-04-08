@@ -75,7 +75,9 @@ public class CreateReceiptPanel extends JPanel {
 
         JTextArea beleg = new JTextArea("");
         beleg.setEditable(false);
-        beleg.setBounds(400, 50, 200, 200);
+        beleg.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        beleg.setBounds(400, 50, 300, 307);
+        beleg.setText(einkauf.BelegErstellen());
         add(beleg);
 
         JButton AddToReceiptButton = new JButton("Zum Einkauf hinzufuegen");
@@ -107,12 +109,17 @@ public class CreateReceiptPanel extends JPanel {
         });
 
         JButton EinkaufBeenden = new JButton("Einkauf beenden");
-        EinkaufBeenden.setBounds(200, 300, 150, 20);
+        EinkaufBeenden.setBounds(125, 300, 150, 20);
         add(EinkaufBeenden);
         EinkaufBeenden.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
                     einkauf.EinkaufBeenden();
+                    produktListe.setSelectedIndex(0);
+                    Menge.setText("0");
+                    ProduktId.setText("");
+                    einkauf = new Einkauf(datenbank, liste);
+                    beleg.setText(einkauf.BelegErstellen());
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }

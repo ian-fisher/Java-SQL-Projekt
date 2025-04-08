@@ -23,14 +23,22 @@ public class Einkauf {
     }
     public String BelegErstellen() {
         String beleg = "";
+        float sum = 0;
         for (int i = 0; i < Produkte.size(); i++) {
             beleg += produktListe.ProdukteNamen[Produkte.get(i)[0]] + " ";
             beleg += "x" + Produkte.get(i)[1] + "\n";
             beleg += produktListe.ProduktePreisen[Produkte.get(i)[0]] * Produkte.get(i)[1] + "€" + "\n";
+            sum += produktListe.ProduktePreisen[Produkte.get(i)[0]] * Produkte.get(i)[1];
         }
+        for (int i = 0; i < 18 - Produkte.size() * 2; i++) {
+            beleg += "\n";
+        }
+        beleg += "Summe: " + sum + "€";
         return beleg;
     }
     public void EinkaufBeenden() throws SQLException {
+        if (Produkte.size() < 1)
+            return;
         String abfrage = "SELECT EinkaufNr FROM Einkauf ORDER BY EinkaufNr DESC LIMIT 1";
         ResultSet ergebnis = datenbank.executeQuery(abfrage);
         int EinkaufNr = 0;
