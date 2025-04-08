@@ -8,11 +8,12 @@ public class CreateReceiptPanel extends JPanel {
     private JButton createReceiptButton;
     private String currentUser;
     private Einkauf einkauf;
-
-    public CreateReceiptPanel(String currentUser) {
+    MySQLConnector datenbank;
+    public CreateReceiptPanel(String currentUser, MySQLConnector datenbank) {
         this.currentUser = currentUser;
+        this.datenbank = datenbank;
         setLayout(null);
-        einkauf = new Einkauf();
+        einkauf = new Einkauf(datenbank);
         JLabel SelectProduct = new JLabel("Produkt auswaehlen:");
         SelectProduct.setBounds(50, 50, 150, 20);
         add(SelectProduct);
@@ -56,6 +57,7 @@ public class CreateReceiptPanel extends JPanel {
                 }
             }
         });
+
         JButton AnzahlVerringern = new JButton("-");
         AnzahlVerringern.setBounds(220, 150, 20, 20);
         add(AnzahlVerringern);
@@ -87,6 +89,19 @@ public class CreateReceiptPanel extends JPanel {
                     beleg.setText(einkauf.BelegErstellen());
                 } else {
                     System.out.println("Anzahl muss eine Nummer sein");
+                }
+            }
+        });
+
+        JButton EinkaufBeenden = new JButton("Einkauf beenden");
+        EinkaufBeenden.setBounds(200, 300, 150, 20);
+        add(EinkaufBeenden);
+        EinkaufBeenden.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    einkauf.EinkaufBeenden();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
                 }
             }
         });

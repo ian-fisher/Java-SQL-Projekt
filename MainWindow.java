@@ -3,9 +3,10 @@ import java.awt.*;
 
 public class MainWindow extends JFrame {
     private String currentUser; // the username of the logged-in worker
-
-    public MainWindow(String currentUser) {
+    MySQLConnector datenbank;
+    public MainWindow(String currentUser, MySQLConnector datenbank) {
         this.currentUser = currentUser;
+        this.datenbank = datenbank;
         setTitle("Grocery Store Management - Logged in as: " + currentUser);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
@@ -14,7 +15,7 @@ public class MainWindow extends JFrame {
         // Create tabs
         JTabbedPane tabbedPane = new JTabbedPane();
 
-        tabbedPane.addTab("Einkauf erstellen", new CreateReceiptPanel(currentUser));
+        tabbedPane.addTab("Einkauf erstellen", new CreateReceiptPanel(currentUser, datenbank));
 
 
         add(tabbedPane, BorderLayout.CENTER);
