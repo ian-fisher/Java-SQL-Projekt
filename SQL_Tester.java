@@ -46,7 +46,7 @@ class SQL_Tester {
           } 
         }
         
-        String Tables[] = new String[]{"Produkt", "Kategorie", "Filiale", "Lieferant", "Kasse", "Mitarbeiter", "Einkauf", "EC_Zahlung", "Kundenkonto", "Bestellung", "Ort"};
+        String Tables[] = new String[]{"Produkt", "Kategorie", "Filiale", "Lieferant", "Kasse", "Mitarbeiter", "Einkauf", "EC_Zahlung", "Kundenkonto", "Bestellung", "Ort", "inventur", "lieferung", "rabatt", "enthaelt"};
         for(String Tablename : Tables){   
           try {
             String befehl = "Drop table " + Tablename;
@@ -57,83 +57,28 @@ class SQL_Tester {
           } 
         }
         
-        try{
-          String DDfile = new String(Files.readAllBytes( (new File("./Datendefinition.sql")).toPath() ));
+        String files[] = new String[]{"./Datendefinition.sql", "./Fremdschluesseln.sql", "./Beziehungen.sql", "./beispieldatensaetze.sql"};
         
-        
-          for (String befehl : DDfile.split(";")) {
-            try {
-              System.out.printf(">> %s%n", befehl);
-              datenbank.executeUpdate(befehl);
-            } catch (Exception e) {
-              // Mögliche Fehler beim Ausführen des Befehls abfangen und Fehlermeldung ausgeben
-              // ... das ist die Reaktion darauf, wenn bei dem Programmteil in einem "try" etwas schief geht
-              System.out.printf("FEHLER: %s%n", e.getMessage());
-            } 
-          } // end of for
+        for(String file : files){
+          try{
+            String DDfile = new String(Files.readAllBytes( (new File(file)).toPath() ));
           
-        }catch(Exception e){
-          System.out.printf("Fehler: %s%n", e.getMessage());
-        }
-             
-        
-        try{
-          String DDfile = new String(Files.readAllBytes( (new File("./Fremdschluesseln.sql")).toPath() ));
-        
-        
-          for (String befehl : DDfile.split(";")) {
-            try {
-              System.out.printf(">> %s%n", befehl);
-              datenbank.executeUpdate(befehl);
-            } catch (Exception e) {
-              // Mögliche Fehler beim Ausführen des Befehls abfangen und Fehlermeldung ausgeben
-              // ... das ist die Reaktion darauf, wenn bei dem Programmteil in einem "try" etwas schief geht
-              System.out.printf("FEHLER: %s%n", e.getMessage());
-            } 
-          } // end of for
           
-        }catch(Exception e){
-          System.out.printf("Fehler: %s%n", e.getMessage());
+            for (String befehl : DDfile.split(";")) {
+              try {
+                System.out.printf(">> %s%n", befehl);
+                datenbank.executeUpdate(befehl);
+              } catch (Exception e) {
+                // Mögliche Fehler beim Ausführen des Befehls abfangen und Fehlermeldung ausgeben
+                // ... das ist die Reaktion darauf, wenn bei dem Programmteil in einem "try" etwas schief geht
+                System.out.printf("FEHLER: %s%n", e.getMessage());
+              } 
+            } // end of for
+            Thread.sleep(1);
+          }catch(Exception e){
+            System.out.printf("Fehler: %s%n", e.getMessage());
+          }
         }
-        
-        try{
-          String DDfile = new String(Files.readAllBytes( (new File("./Beziehungen.sql")).toPath() ));
-        
-        
-          for (String befehl : DDfile.split(";")) {
-            try {
-              System.out.printf(">> %s%n", befehl);
-              datenbank.executeUpdate(befehl);
-            } catch (Exception e) {
-              // Mögliche Fehler beim Ausführen des Befehls abfangen und Fehlermeldung ausgeben
-              // ... das ist die Reaktion darauf, wenn bei dem Programmteil in einem "try" etwas schief geht
-              System.out.printf("FEHLER: %s%n", e.getMessage());
-            } 
-          } // end of for
-          
-        }catch(Exception e){
-          System.out.printf("Fehler: %s%n", e.getMessage());
-        }
-
-        try{
-          String DDfile = new String(Files.readAllBytes( (new File("./beispieldatensaetze.sql")).toPath() ));
-        
-        
-          for (String befehl : DDfile.split(";")) {
-            try {
-              System.out.printf(">> %s%n", befehl);
-              datenbank.executeUpdate(befehl);
-            } catch (Exception e) {
-              // Mögliche Fehler beim Ausführen des Befehls abfangen und Fehlermeldung ausgeben
-              // ... das ist die Reaktion darauf, wenn bei dem Programmteil in einem "try" etwas schief geht
-              System.out.printf("FEHLER: %s%n", e.getMessage());
-            } 
-          } // end of for
-          
-        }catch(Exception e){
-          System.out.printf("Fehler: %s%n", e.getMessage());
-        }
-
         /*try {
           // Die gesamte aktive Tabelle wird zum überprüfen einmal ausgegeben
           String abfrage = "SELECT * FROM Produkt";

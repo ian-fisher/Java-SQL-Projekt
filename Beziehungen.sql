@@ -2,25 +2,34 @@
 
 
 CREATE TABLE inventur (
-  UNSIGNED PRIMARY KEY (FilialeNr INT, ProduktNr INT),
-  Menge INT UNSIGNED
+  FilialeNr INT UNSIGNED, 
+  ProduktNr INT UNSIGNED, 
+  Menge INT UNSIGNED,
+  PRIMARY KEY (FilialeNr, ProduktNr)
   );                                         
   
 CREATE TABLE lieferung (
-  UNSIGNED PRIMARY KEY (LieferantNr UNSIGNED INT, ProdunktNr UNSIGNED INT, BestellungNr UNSUGNED INT),
-  Anzahl UNSIGNED INT,
-  Datum TEXT,
-  Status TEXT
+  LieferantNr INT UNSIGNED, 
+  ProdunktNr INT UNSIGNED, 
+  BestellungNr INT UNSIGNED,
+  Anzahl INT UNSIGNED,
+  Datum VARCHAR(30) NOT NULL,
+  Status VARCHAR(30) NOT NULL,
+  PRIMARY KEY (LieferantNr, ProdunktNr, BestellungNr)
   );
   
 CREATE TABLE rabatt (
-  UNSIGNED PRIMARY KEY (ProduKtNr UNSIGNED INT, FilialeNr UNSIGNED INT),
-  RabattProzent UNSIGNED FLOAT
+  ProduKtNr INT UNSIGNED, 
+  FilialeNr INT UNSIGNED,
+  RabattProzent DECIMAL(5,2) NOT NULL,
+  PRIMARY KEY (ProduKtNr, FilialeNr)
   );
   
 CREATE TABLE enthaelt (
-  UNSIGNED PRIMARY KEY (EinkaufNr UNSIGNED INT, ProduktNr UNSIGNED INT),
-  Menge UNSIGNED INT,
-  Steuer UNSIGNED FLOAT
+  EinkaufNr INT UNSIGNED,
+  ProduktNr INT UNSIGNED,
+  Menge INT UNSIGNED,
+  Steuer DECIMAL(5,2) NOT NULL,
+  PRIMARY KEY (EinkaufNr, ProduktNr)
   );
                 

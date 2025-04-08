@@ -34,7 +34,19 @@ class SQL_Tester {
         // Tip: Der hier öfter verwendete Befehl "try" erlaubt es, im Programmablauf auftretende Fehler
         // abzufangen und auf sie zu reagieren, statt das Program bei einem Fehler direkt zu beenden
         datenbank.connect();
-        String Tables[] = new String[]{"Produkt", "Kategorie", "Filiale", "Lieferant", "Kasse", "Mitarbeiter", "Einkauf", "EC_Zahlung", "Kundenkonto", "Bestellung"};
+        
+        String Constraints[] = new String[]{"FS_Lieferant_Ort", "FS_Filiale_Ort", "FS_Produkt_Kategorie", "FS_Kasse_Filiale", "FS_Mitarbeiter_Filiale", "FS_Bestellung_Filiale", "FS_Einkauf_Kasse", "FS_Einkauf_Mitarbeiter", "FS_Einkauf_Kundenkonto", "FS_Einkauf_EC_Zahlung"};
+        for(String Constraintname : Constraints){   
+          try {
+            String befehl = "Alter table " +Constraintname.split("_")[1]+ " Drop constraint " + Constraintname;
+            System.out.printf(">> %s%n", befehl);
+            datenbank.executeUpdate(befehl);
+          } catch(Exception e) {
+            System.out.printf("FEHLER: %s%n", e.getMessage());
+          } 
+        }
+        
+        String Tables[] = new String[]{"Produkt", "Kategorie", "Filiale", "Lieferant", "Kasse", "Mitarbeiter", "Einkauf", "EC_Zahlung", "Kundenkonto", "Bestellung", "Ort", "inventur", "lieferung", "rabatt", "enthaelt"};
         for(String Tablename : Tables){   
           try {
             String befehl = "Drop table " + Tablename;
@@ -45,24 +57,28 @@ class SQL_Tester {
           } 
         }
         
-        try{
-          String DDfile = new String(Files.readAllBytes( (new File("./Datendefinition.sql")).toPath() ));
-        }catch(Exception e){
-          System.out.printf("Fehler: %s%n", e.getMessage());
+        String files[] = new String[]{"./Datendefinition.sql", "./Fremdschluesseln.sql", "./Beziehungen.sql", "./beispieldatensaetze.sql"};
+        
+        for(String file : files){
+          try{
+            String DDfile = new String(Files.readAllBytes( (new File(file)).toPath() ));
+          
+          
+            for (String befehl : DDfile.split(";")) {
+              try {
+                System.out.printf(">> %s%n", befehl);
+                datenbank.executeUpdate(befehl);
+              } catch (Exception e) {
+                // Mögliche Fehler beim Ausführen des Befehls abfangen und Fehlermeldung ausgeben
+                // ... das ist die Reaktion darauf, wenn bei dem Programmteil in einem "try" etwas schief geht
+                System.out.printf("FEHLER: %s%n", e.getMessage());
+              } 
+            } // end of for
+            Thread.sleep(5000);
+          }catch(Exception e){
+            System.out.printf("Fehler: %s%n", e.getMessage());
+          }
         }
-        
-        for (String befehl : DDfile.split(";")) {
-          try {
-            System.out.printf(">> %s%n", befehl);
-            datenbank.executeUpdate(befehl);
-          } catch (Exception e) {
-            // Mögliche Fehler beim Ausführen des Befehls abfangen und Fehlermeldung ausgeben
-            // ... das ist die Reaktion darauf, wenn bei dem Programmteil in einem "try" etwas schief geht
-            System.out.printf("FEHLER: %s%n", e.getMessage());
-          } 
-        } // end of for
-             
-        
         /*try {
           // Die gesamte aktive Tabelle wird zum überprüfen einmal ausgegeben
           String abfrage = "SELECT * FROM Produkt";
