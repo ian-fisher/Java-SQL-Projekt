@@ -61,8 +61,9 @@ class SQL_Tester {
         
         for(String file : files){
           try{
-            String DDfile = new String(Files.readAllBytes( (new File(file)).toPath() ));
-          
+            String DDfile = new String(Files.readAllBytes( (new File(file)).toPath() ));     
+            
+            Thread.sleep(0);
           
             for (String befehl : DDfile.split(";")) {
               try {
@@ -74,7 +75,6 @@ class SQL_Tester {
                 System.out.printf("FEHLER: %s%n", e.getMessage());
               } 
             } // end of for
-            Thread.sleep(1);
           }catch(Exception e){
             System.out.printf("Fehler: %s%n", e.getMessage());
           }

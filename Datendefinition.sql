@@ -6,7 +6,7 @@ CREATE TABLE Produkt(
 );
 
 CREATE TABLE Kategorie(
-	Name VARCHAR(30) NOT NULL, 
+	Name VARCHAR(30) NOT NULL PRIMARY KEY, 
 	SteuerklasseProzent DECIMAL(5,2) NOT NULL
 );
 
@@ -36,15 +36,17 @@ CREATE TABLE Mitarbeiter (
 
 CREATE TABLE Einkauf     (
 	EinkaufNr INT UNSIGNED PRIMARY KEY, 
-	Uhrzeit INT UNSIGNED, 
-	Datum INT UNSIGNED, 
+	Uhrzeit VARCHAR(30) NOT NULL, 
+	Jahr INT UNSIGNED, 
+	Monat INT UNSIGNED, 
+	Tag INT UNSIGNED, 
 	RabattProzent DECIMAL(5,2) NOT NULL
 );
 
 CREATE TABLE EC_Zahlung  (
 	EC_ZahlungNr INT UNSIGNED PRIMARY KEY, 
 	KartenNr INT UNSIGNED, 
-	IBAN INT UNSIGNED, 
+	IBAN VARCHAR(30) NOT NULL, 
 	Betrag INT UNSIGNED, 
 	InhaberVorname VARCHAR(30) NOT NULL, 
 	InhaberName VARCHAR(30) NOT NULL
@@ -57,8 +59,12 @@ CREATE TABLE Kundenkonto (
 
 CREATE TABLE Bestellung  (
 	BestellungNr  INT UNSIGNED PRIMARY KEY, 
-	Datum INT UNSIGNED
+	Jahr INT UNSIGNED,
+	Monat INT UNSIGNED,
+	Tag INT UNSIGNED
 );
 
-
-/*Creating Beziehungen*/
+CREATE TABLE Ort         (
+	PLZ INT UNSIGNED PRIMARY KEY,
+	Name VARCHAR(30) NOT NULL
+);
