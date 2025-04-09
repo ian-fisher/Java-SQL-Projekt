@@ -3,11 +3,11 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
 
-public class CreateReceiptPanel extends JPanel {
+public class EinkaufErstellen extends JPanel {
     private String currentUser;
     private Einkauf einkauf;
     MySQLConnector datenbank;
-    public CreateReceiptPanel(String currentUser, MySQLConnector datenbank) throws SQLException {
+    public EinkaufErstellen(String currentUser, MySQLConnector datenbank) throws SQLException {
         this.currentUser = currentUser;
         this.datenbank = datenbank;
         ProduktListe liste = new ProduktListe(datenbank);

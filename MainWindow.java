@@ -16,7 +16,7 @@ public class MainWindow extends JFrame {
         // Create tabs
         JTabbedPane tabbedPane = new JTabbedPane();
 
-        tabbedPane.addTab("Einkauf erstellen", new CreateReceiptPanel(currentUser, datenbank));
+        tabbedPane.addTab("Einkauf erstellen", new EinkaufErstellen(currentUser, datenbank));
 
 
         add(tabbedPane, BorderLayout.CENTER);
